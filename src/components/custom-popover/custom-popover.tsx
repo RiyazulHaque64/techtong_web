@@ -41,7 +41,7 @@ export function CustomPopover({
           sx: {
             ...paperStyles,
             overflow: 'inherit',
-            [`& .${listClasses.root}`]: { minWidth: 140 },
+            [`& .${listClasses.root}`]: { minWidth: 84 },
             [`& .${menuItemClasses.root}`]: { gap: 2 },
             ...(slotProps?.paper as PaperProps)?.sx,
           },

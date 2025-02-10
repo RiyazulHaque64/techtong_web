@@ -11,14 +11,11 @@ import { useTheme, useColorScheme } from '@mui/material/styles';
 
 import COLORS from 'src/theme/core/colors.json';
 import { paper, varAlpha } from 'src/theme/styles';
-import { defaultFont } from 'src/theme/core/typography';
 import PRIMARY_COLOR from 'src/theme/with-settings/primary-color.json';
 
 import { Iconify } from '../../iconify';
 import { BaseOption } from './base-option';
-import { NavOptions } from './nav-options';
 import { Scrollbar } from '../../scrollbar';
-import { FontOptions } from './font-options';
 import { useSettingsContext } from '../context';
 import { PresetsOptions } from './presets-options';
 import { defaultSettings } from '../config-settings';
@@ -30,13 +27,8 @@ import type { SettingsDrawerProps } from '../types';
 
 export function SettingsDrawer({
   sx,
-  hideFont,
-  hideCompact,
   hidePresets,
-  hideNavColor,
   hideContrast,
-  hideNavLayout,
-  hideDirection,
   hideColorScheme,
 }: SettingsDrawerProps) {
   const theme = useTheme();
@@ -50,9 +42,7 @@ export function SettingsDrawer({
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
         Settings
       </Typography>
-
       <FullScreenButton />
-
       <Tooltip title="Reset">
         <IconButton
           onClick={() => {
@@ -65,7 +55,6 @@ export function SettingsDrawer({
           </Badge>
         </IconButton>
       </Tooltip>
-
       <Tooltip title="Close">
         <IconButton onClick={settings.onCloseDrawer}>
           <Iconify icon="mingcute:close-line" />
@@ -97,27 +86,6 @@ export function SettingsDrawer({
     />
   );
 
-  const renderRTL = (
-    <BaseOption
-      label="Right to left"
-      icon="align-right"
-      selected={settings.direction === 'rtl'}
-      onClick={() =>
-        settings.onUpdateField('direction', settings.direction === 'ltr' ? 'rtl' : 'ltr')
-      }
-    />
-  );
-
-  const renderCompact = (
-    <BaseOption
-      tooltip="Dashboard only and available at large resolutions > 1600px (xl)"
-      label="Compact"
-      icon="autofit-width"
-      selected={settings.compactLayout}
-      onClick={() => settings.onUpdateField('compactLayout', !settings.compactLayout)}
-    />
-  );
-
   const renderPresets = (
     <PresetsOptions
       value={settings.primaryColor}
@@ -130,33 +98,6 @@ export function SettingsDrawer({
         { name: 'orange', value: PRIMARY_COLOR.orange.main },
         { name: 'red', value: PRIMARY_COLOR.red.main },
       ]}
-    />
-  );
-
-  const renderNav = (
-    <NavOptions
-      value={{
-        color: settings.navColor,
-        layout: settings.navLayout,
-      }}
-      onClickOption={{
-        color: (newValue) => settings.onUpdateField('navColor', newValue),
-        layout: (newValue) => settings.onUpdateField('navLayout', newValue),
-      }}
-      options={{
-        colors: ['integrate', 'apparent'],
-        layouts: ['vertical', 'horizontal', 'mini'],
-      }}
-      hideNavColor={hideNavColor}
-      hideNavLayout={hideNavLayout}
-    />
-  );
-
-  const renderFont = (
-    <FontOptions
-      value={settings.fontFamily}
-      onClickOption={(newValue) => settings.onUpdateField('fontFamily', newValue)}
-      options={[defaultFont, 'Inter Variable', 'DM Sans Variable', 'Nunito Sans Variable']}
     />
   );
 
@@ -184,12 +125,8 @@ export function SettingsDrawer({
           <Box gap={2} display="grid" gridTemplateColumns="repeat(2, 1fr)">
             {!hideColorScheme && renderMode}
             {!hideContrast && renderContrast}
-            {!hideDirection && renderRTL}
-            {!hideCompact && renderCompact}
           </Box>
-          {!(hideNavLayout && hideNavColor) && renderNav}
           {!hidePresets && renderPresets}
-          {!hideFont && renderFont}
         </Stack>
       </Scrollbar>
     </Drawer>

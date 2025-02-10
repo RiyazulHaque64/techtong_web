@@ -7,6 +7,7 @@ import type { Viewport } from 'next';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 
 import { CONFIG } from 'src/config-global';
+import { MainLayout } from 'src/layouts/main';
 import { primary } from 'src/theme/core/palette';
 import { schemeConfig } from 'src/theme/scheme-config';
 import { ThemeProvider } from 'src/theme/theme-provider';
@@ -53,7 +54,7 @@ export default async function RootLayout({ children }: Props) {
               <MotionLazy>
                 <ProgressBar />
                 <SettingsDrawer />
-                {children}
+                <MainLayout>{children}</MainLayout>
               </MotionLazy>
             </ThemeProvider>
           </SettingsProvider>

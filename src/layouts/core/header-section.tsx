@@ -90,6 +90,7 @@ export function HeaderSection({
       sx={{
         zIndex: 'var(--layout-header-zIndex)',
         ...sx,
+        px: { lg: 6 },
       }}
       {...other}
     >
@@ -112,6 +113,7 @@ export function HeaderSection({
             alignItems: 'center',
             ...slotProps?.container?.sx,
           }}
+          maxWidth="xl"
         >
           {slots?.leftArea}
 
