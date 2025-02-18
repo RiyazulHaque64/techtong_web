@@ -1,6 +1,8 @@
 'use client';
 
 import type { BoxProps } from '@mui/material/Box';
+import type { TMeta } from 'src/interfaces/common';
+import type { IProduct, TProductMeta } from 'src/interfaces/product';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -18,8 +20,12 @@ import { ShopSidebarFilter } from './components/shop-sidebar-filter';
 // ----------------------------------------------------------------------
 
 export type TFilterOption = { value: string; label: string };
+type Props = {
+  data: IProduct[];
+  meta: TMeta & TProductMeta;
+};
 
-export function ShopView() {
+export function ShopView({ data, meta }: Props) {
   return (
     <>
       <ShopHeroLight>
@@ -48,7 +54,7 @@ export function ShopView() {
           gap={3}
           sx={{ px: { lg: 6 } }}
         >
-          <ShopSidebarFilter />
+          <ShopSidebarFilter attributes={meta.attribute} />
 
           <Stack spacing={3} sx={{ flexGrow: 1 }}>
             <ShopFilterToolbar />
