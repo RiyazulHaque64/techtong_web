@@ -72,5 +72,6 @@ export type TProductMeta = {
   featured: number;
   low_stock: number;
   in_stock: number;
-  attribute: IAttribute[];
+  max_price: number;
+  attributes: IAttribute[];
 };

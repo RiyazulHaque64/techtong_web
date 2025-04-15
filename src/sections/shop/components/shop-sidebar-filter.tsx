@@ -1,7 +1,9 @@
-import type { IAttribute } from 'src/interfaces/attribute';
 
-import Stack from '@mui/material/Stack';
+import type { TMeta } from 'src/interfaces/common';
+import type { TProductMeta } from 'src/interfaces/product';
+
 import { Divider } from '@mui/material';
+import Stack from '@mui/material/Stack';
 
 import { hideScrollY } from 'src/theme/styles';
 
@@ -12,10 +14,10 @@ import FilterSection from './filter-section';
 // ----------------------------------------------------------------------
 
 type Props = {
-  attributes: IAttribute[];
+  meta: TMeta & TProductMeta;
 };
 
-export function ShopSidebarFilter({ attributes }: Props) {
+export function ShopSidebarFilter({ meta }: Props) {
   return (
     <Stack
       component="nav"
@@ -34,8 +36,8 @@ export function ShopSidebarFilter({ attributes }: Props) {
       }}
       divider={<Divider sx={{ mt: 2, mb: 1, borderStyle: 'dashed' }} />}
     >
-      <PriceRange />
-      {attributes.map((attribute) => (
+      <PriceRange maxPrice={meta.max_price} />
+      {meta?.attributes.map((attribute) => (
         <FilterSection key={attribute.id} attribute={attribute} />
       ))}
     </Stack>

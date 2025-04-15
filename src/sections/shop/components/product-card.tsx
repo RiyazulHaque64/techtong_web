@@ -1,39 +1,36 @@
+import type { IProduct } from 'src/interfaces/product';
+
 import { m } from 'framer-motion';
 
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import CardActionArea from '@mui/material/CardActionArea';
 import {
   Box,
-  List,
-  Stack,
   Button,
   Divider,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText,
+  Stack,
 } from '@mui/material';
+import CardActionArea from '@mui/material/CardActionArea';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 
 import { RouterLink } from 'src/routes/components';
 
 import { varAlpha } from 'src/theme/styles';
 
-import { Image } from 'src/components/image';
-import { Iconify } from 'src/components/iconify';
 import { varHover, varTranHover } from 'src/components/animate';
+import { Iconify } from 'src/components/iconify';
+import { Image } from 'src/components/image';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  item: {
-    name: string;
-    icon: string;
-    href: string;
-    category?: string;
-  };
+  product: IProduct
 };
 
-export function ProductCard({ item }: Props) {
+export function ProductCard({ product }: Props) {
   return (
     <Paper
       variant="outlined"
@@ -45,7 +42,7 @@ export function ProductCard({ item }: Props) {
         borderColor: (theme) => varAlpha(theme.vars.palette.grey['500Channel'], 0.12),
       }}
     >
-      <Box component={RouterLink} href={item.href} sx={{ textDecoration: 'none' }}>
+      <Box component={RouterLink} href={product.slug} sx={{ textDecoration: 'none' }}>
         <CardActionArea
           component={m.div}
           whileHover="hover"
@@ -57,7 +54,7 @@ export function ProductCard({ item }: Props) {
         >
           <m.div variants={varHover(1.1)} transition={varTranHover()}>
             <Image
-              alt={item.name}
+              alt={product.name}
               src="https://img.freepik.com/free-vector/white-product-podium-with-green-tropical-palm-leaves-golden-round-arch-green-wall_87521-3023.jpg"
               ratio="1/1"
               sx={{ width: '100%', maxWidth: 1, objectFit: 'cover' }}
@@ -66,7 +63,7 @@ export function ProductCard({ item }: Props) {
         </CardActionArea>
 
         <Typography variant="subtitle2" sx={{ px: 2, mt: 2, color: 'text.primary' }}>
-          Gigabyte H110M Motherboard
+          {product.name}
         </Typography>
       </Box>
       <Stack sx={{ px: 2 }}>
@@ -102,7 +99,7 @@ export function ProductCard({ item }: Props) {
             variant="caption"
             sx={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'grey.700' }}
           >
-            {new Intl.NumberFormat('en-US').format(1020)}
+            {new Intl.NumberFormat('en-US').format(product.price)}
           </Typography>
           <Iconify
             icon="tabler:currency-taka"

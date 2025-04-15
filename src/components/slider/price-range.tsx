@@ -2,21 +2,32 @@
 
 import type { SyntheticEvent } from 'react';
 
-import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import { Box, Slider, TextField, Typography } from '@mui/material';
 
-const productMinPrice = 1000; // Example product minimum price
-const productMaxPrice = 90000; // Example product maximum price
+const productMinPrice = 0;
 
-const PriceRange = () => {
+type Props = {
+  maxPrice: number
+}
+
+const PriceRange = ({ maxPrice: productMaxPrice = 1000000 }: Props) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Get values from search params or default to product price range
-  const minPrice = Number(searchParams.get('min_price')) || productMinPrice;
-  const maxPrice = Number(searchParams.get('max_price')) || productMaxPrice;
+  // Get values from search params or use defaults
+  const priceRangeParam = searchParams.get('price_range');
+  let [minPrice, maxPrice] = priceRangeParam
+    ? priceRangeParam.split(',').map(Number)
+    : [productMinPrice, productMaxPrice];
+
+  // Reset to 0 if minPrice is greater than maxPrice
+  if (minPrice > maxPrice) {
+    minPrice = 0;
+    maxPrice = 0;
+  }
 
   const [price, setPrice] = useState<[number, number]>([minPrice, maxPrice]);
 
@@ -28,20 +39,16 @@ const PriceRange = () => {
   const updateSearchParams = (newPrice: [number, number]) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    // Handle min_price
-    if (newPrice[0] <= productMinPrice) {
-      params.delete('min_price'); // Remove from params if it's at the minimum
-    } else {
-      params.set('min_price', String(newPrice[0]));
+    // If minPrice is greater than maxPrice, reset to 0
+    if (newPrice[0] > newPrice[1]) {
+      params.set('price_range', '0');
+      setPrice([0, 0]);
     }
-
-    // Handle max_price
-    if (newPrice[1] >= productMaxPrice) {
-      params.delete('max_price'); // Remove from params if it's at the maximum
-    } else if (newPrice[1] < newPrice[0]) {
-      params.set('max_price', String(productMaxPrice)); // Reset if max < min
+    // If price is at default values, remove it from URL
+    else if (newPrice[0] === productMinPrice && newPrice[1] === productMaxPrice) {
+      params.delete('price_range');
     } else {
-      params.set('max_price', String(newPrice[1]));
+      params.set('price_range', `${newPrice[0]},${newPrice[1]}`);
     }
 
     router.push(`?${params.toString()}`, { scroll: false });
@@ -56,8 +63,14 @@ const PriceRange = () => {
     newValue: number | number[]
   ) => {
     const newPrice = newValue as [number, number];
-    setPrice(newPrice);
-    updateSearchParams(newPrice);
+
+    if (newPrice[0] > newPrice[1]) {
+      setPrice([0, 0]);
+      updateSearchParams([0, 0]);
+    } else {
+      setPrice(newPrice);
+      updateSearchParams(newPrice);
+    }
   };
 
   const handleInputChange = (index: number, value: string) => {
@@ -70,14 +83,15 @@ const PriceRange = () => {
     if (e.key === 'Enter') {
       const newPrice = [...price] as [number, number];
 
-      // Ensure min_price is valid
+      // Ensure minPrice is valid
       if (index === 0 && newPrice[0] <= productMinPrice) {
         newPrice[0] = productMinPrice;
       }
 
-      // Ensure max_price is valid
-      if (index === 1 && newPrice[1] < newPrice[0]) {
-        newPrice[1] = productMaxPrice;
+      // If minPrice > maxPrice, reset both to 0
+      if (newPrice[0] > newPrice[1]) {
+        newPrice[0] = 0;
+        newPrice[1] = 0;
       }
 
       updateSearchParams(newPrice);

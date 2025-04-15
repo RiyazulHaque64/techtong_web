@@ -4,28 +4,32 @@ import type { BoxProps } from '@mui/material/Box';
 import type { TMeta } from 'src/interfaces/common';
 import type { IProduct, TProductMeta } from 'src/interfaces/product';
 
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
 
 import { MotionContainer } from 'src/components/animate';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+import { Iconify } from 'src/components/iconify';
 
 import { ProductCard } from './components/product-card';
-import { ShopHeroLight } from './components/shop-hero-light';
 import ShopFilterToolbar from './components/shop-filter-toolbar';
-import { foundationNav } from './components/config-shop-components';
+import { ShopHeroLight } from './components/shop-hero-light';
 import { ShopSidebarFilter } from './components/shop-sidebar-filter';
 
 // ----------------------------------------------------------------------
 
 export type TFilterOption = { value: string; label: string };
 type Props = {
-  data: IProduct[];
+  products: IProduct[];
   meta: TMeta & TProductMeta;
 };
 
-export function ShopView({ data, meta }: Props) {
+
+
+export function ShopView({ products, meta }: Props) {
+
   return (
     <>
       <ShopHeroLight>
@@ -54,15 +58,27 @@ export function ShopView({ data, meta }: Props) {
           gap={3}
           sx={{ px: { lg: 6 } }}
         >
-          <ShopSidebarFilter attributes={meta.attribute} />
+          <ShopSidebarFilter meta={meta} />
 
           <Stack spacing={3} sx={{ flexGrow: 1 }}>
             <ShopFilterToolbar />
-            <Grid>
-              {foundationNav.map((item) => (
-                <ProductCard key={item.name} item={item} />
-              ))}
-            </Grid>
+            {
+              products.length > 0 ? (
+                <Grid>
+                  {
+                    products.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))
+                  }
+                </Grid>
+              ) : (
+                <Stack direction='column' alignItems='center' sx={{ py: 10 }}>
+                  <Iconify icon="solar:filter-linear" sx={{ width: 60, height: 60 }} />
+                  <Typography variant='subtitle2'>No product found!</Typography>
+                </Stack>
+              )
+            }
+
           </Stack>
         </Stack>
       </Container>

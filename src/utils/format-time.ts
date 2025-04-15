@@ -266,4 +266,11 @@ export function fSub({
     .format();
 
   return result;
+};
+
+
+export function intervalDays(date1: string, date2: string) {
+  const diffInTime = new Date(date2).getTime() - new Date(date1).getTime();
+  const diffInDays = Math.round(diffInTime / (1000 * 3600 * 24));
+  return diffInDays;
 }
